@@ -26,11 +26,8 @@ io.on('connection',(socket)=>{
 
 function emitMessage(socket,data){
     console.log("NOw emiiting data",data);
-    socket.emit('newMessage',{
-        from:data.from,
-        text:data.text,
-        createdAt:new Date()
-    });
+    data.createdAt = new Date().getTime();
+    io.emit('newMessage',data);
 }
 
 
