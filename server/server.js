@@ -19,7 +19,7 @@ io.on('connection',(socket)=>{
 
     socket.on('createMessage',(data)=>{
         console.log("some guy sent this message",data);
-        emitMessage(socket,data);
+        broadcastMessage(socket,data);
 
     })
 });
@@ -27,9 +27,13 @@ io.on('connection',(socket)=>{
 function emitMessage(socket,data){
     console.log("NOw emiiting data",data);
     data.createdAt = new Date().getTime();
+    socket.emit('newMessage',data);
+}
+function broadcastMessage(data) {
+    console.log("NOw emiiting data",data);
+    data.createdAt = new Date().getTime();
     io.emit('newMessage',data);
 }
-
 
 
 
