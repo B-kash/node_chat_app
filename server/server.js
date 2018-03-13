@@ -24,10 +24,10 @@ io.on('connection',(socket)=>{
         console.log("Client disconnected");
     });
 
-    socket.on('createMessage',(data)=>{
+    socket.on('createMessage',(data,callbackFunc)=>{
         console.log("some guy sent this message",data);
         broadcastMessage(socket,'newMessage',generateMessage(data.from,data.text));
-
+        callbackFunc && callbackFunc(generateMessage(data.from,data.text));
     })
 });
 
