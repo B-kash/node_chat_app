@@ -24,10 +24,23 @@ function appendMessage(data) {
     jQuery('#messages').append(li);
 }
 
-jQuery('#message-form').on('submit',function(e){
+function send(e){
    e.preventDefault();
    emitMessage('createMessage',{
        from:'User',
        text: jQuery('[name=message]').val()
    });
-});
+}
+function sendLocation(){
+    // e.preventDefault();
+    if(!navigator.geolocation){
+        return alert('Geolocation not supported');
+    }
+    navigator.geolocation.getCurrentPosition(function(pos){
+        console.log(pos);
+    },(function (){
+        alert("unable to fetch location");
+    }))
+}
+
+
