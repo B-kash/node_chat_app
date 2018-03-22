@@ -1,6 +1,7 @@
 let socket = io();
 let messageTextBox = jQuery('[name=message]');
 let locationButton = jQuery('[id=send-location]');
+let template = jQuery('#message-template').html();
 socket.on('connect', () => {
 });
 socket.on('disconnect', () => {
@@ -9,13 +10,14 @@ socket.on('newMessage', (data) => {
     appendMessage(data);
 });
 socket.on('newLocationMessage',(message) => {
-    let li = jQuery('<li></li>');
-    let a = jQuery('<a target="_blank">My Current Location</a>');
-    let formattedTime = formatTime(message.createdAt);
-    li.text(`${message.from} ${formattedTime}:`);
-    a.attr('href',message.ulr);
-    li.append(a);
-    jQuery('#messages').append(li);
+    // let a = jQuery('<a target="_blank">My Current Location</a>');
+    // a.attr('href',message.url);
+    let a = '<a target="_blank" href="message.url">My Current Location</a>';
+    appendMessage({
+        from:message.from,
+        text: a,
+        createdAt: message.createdAt
+    });
 
 });
 function emitMessage(event,data) {
@@ -26,10 +28,17 @@ function emitMessage(event,data) {
 }
 
 function appendMessage(data) {
-    let li = jQuery('<li></li>');
+    // let li = jQuery('<li></li>');
+    // let formattedTime = formatTime(data.createdAt);
+    // li.text(`${data.from} ${formattedTime}:${data.text}`);
+    // jQuery('#messages').append(li);
     let formattedTime = formatTime(data.createdAt);
-    li.text(`${data.from} ${formattedTime}:${data.text}`);
-    jQuery('#messages').append(li);
+    let html = Mustache.render(template,{
+        text:data.text,
+        formattedTime:formattedTime,
+        from: data.from
+    });
+    jQuery('#messages').append(html);
 }
 
 function formatTime(timeStamp) {
