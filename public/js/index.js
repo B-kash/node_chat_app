@@ -12,6 +12,15 @@ socket.on('disconnect', () => {
 socket.on('newMessage', (data) => {
     appendMessage(data);
 });
+socket.on('newLocationMessage',(message) => {
+    let li = jQuery('<li></li>');
+    let a = jQuery('<a target="_blank">My Current Location</a>');
+    li.text(`${message.from}:`);
+    a.attr('href',message.ulr);
+    li.append(a);
+    jQuery('#messages').append(li);
+
+});
 function emitMessage(event,data) {
     socket.emit(event, data, function (res) {
         appendMessage(res);
@@ -38,6 +47,10 @@ function sendLocation(){
     }
     navigator.geolocation.getCurrentPosition(function(pos){
         console.log(pos);
+        socket.emit('createLocationMessage',{
+            latitude:pos.coords.latitude,
+            longitude:pos.coords.longitude
+        });
     },(function (){
         alert("unable to fetch location");
     }))

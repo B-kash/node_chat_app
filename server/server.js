@@ -10,6 +10,7 @@ let server = http.createServer(app);
 let io = socketIO(server);
 
 const {generateMessage} = require('./utils/message');
+const {generateLocationMessage} = require('./utils/message');
 
 app.use(express.static(publicPath));
 
@@ -28,6 +29,10 @@ io.on('connection',(socket)=>{
         console.log("some guy sent this message",data);
         broadcastMessage(socket,'newMessage',generateMessage(data.from,data.text));
         callbackFunc && callbackFunc(generateMessage(data.from,data.text));
+    });
+
+    socket.on('createLocationMessage',(coords)=>{
+        io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
     })
 });
 
