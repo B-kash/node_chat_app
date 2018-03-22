@@ -11,7 +11,8 @@ socket.on('newMessage', (data) => {
 socket.on('newLocationMessage',(message) => {
     let li = jQuery('<li></li>');
     let a = jQuery('<a target="_blank">My Current Location</a>');
-    li.text(`${message.from}:`);
+    let formattedTime = formatTime(message.createdAt);
+    li.text(`${message.from} ${formattedTime}:`);
     a.attr('href',message.ulr);
     li.append(a);
     jQuery('#messages').append(li);
@@ -26,8 +27,13 @@ function emitMessage(event,data) {
 
 function appendMessage(data) {
     let li = jQuery('<li></li>');
-    li.text(`${data.from}:${data.text}`);
+    let formattedTime = formatTime(data.createdAt);
+    li.text(`${data.from} ${formattedTime}:${data.text}`);
     jQuery('#messages').append(li);
+}
+
+function formatTime(timeStamp) {
+    return moment(timeStamp).format('h:mm a');
 }
 
 function send(e){
