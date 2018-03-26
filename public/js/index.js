@@ -39,6 +39,7 @@ function appendMessage(data) {
         from: data.from
     });
     jQuery('#messages').append(html);
+    scrollToBottom();
 }
 
 function appendLocation(data){
@@ -51,6 +52,7 @@ function appendLocation(data){
     });
     // html.append(a);
     jQuery('#messages').append(html).append(a);
+    scrollToBottom();
 }
 
 function formatTime(timeStamp) {
@@ -82,5 +84,17 @@ function sendLocation(){
         alert("unable to fetch location");
     }))
 }
+function scrollToBottom() {
+    let messages = jQuery('#messages');
+    let newMessage = messages.children('li:last-child');
 
+    let clientHeight = messages.prop('clientHeight');
+    let scrollTop = messages.prop('scrollTop');
+    let scrollHeight = messages.prop('scrollHeight');
+    let newMessageHeight = newMessage.innerHeight();
+    let lastMessageHeight = newMessage.prev().innerHeight();
+    if(clientHeight+scrollTop+newMessageHeight+lastMessageHeight >= scrollHeight){
+        messages.scrollTop(scrollHeight);
+    }
+}
 
