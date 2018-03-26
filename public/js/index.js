@@ -12,11 +12,11 @@ socket.on('newMessage', (data) => {
 socket.on('newLocationMessage',(message) => {
     // let a = jQuery('<a target="_blank">My Current Location</a>');
     // a.attr('href',message.url);
-    let a = '<a target="_blank" href="message.url">My Current Location</a>';
-    appendMessage({
+    // let a = '<a target="_blank" href="message.url">My Current Location</a>';
+    appendLocation({
         from:message.from,
-        text: a,
-        createdAt: message.createdAt
+        createdAt: message.createdAt,
+        url:message.url
     });
 
 });
@@ -39,6 +39,18 @@ function appendMessage(data) {
         from: data.from
     });
     jQuery('#messages').append(html);
+}
+
+function appendLocation(data){
+    let formattedTime = formatTime(data.createdAt);
+    let a = jQuery('<a target="_blank" class="message__body">My Current Location</a>');
+    a.attr('href',data.url);
+    let html = Mustache.render(template,{
+        formattedTime:formattedTime,
+        from: data.from
+    });
+    // html.append(a);
+    jQuery('#messages').append(html).append(a);
 }
 
 function formatTime(timeStamp) {
