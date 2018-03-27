@@ -2,7 +2,17 @@ let socket = io();
 let messageTextBox = jQuery('[name=message]');
 let locationButton = jQuery('[id=send-location]');
 let template = jQuery('#message-template').html();
+let params;
 socket.on('connect', () => {
+    params = jQuery.deparam(window.location.search);
+    socket.emit("join",params,(err)=>{
+        if(err){
+            console.log("Error",err);
+            window.location.href= '/';
+        }else{
+
+        }
+    })
 });
 socket.on('disconnect', () => {
 });
@@ -61,8 +71,9 @@ function formatTime(timeStamp) {
 
 function send(e){
    e.preventDefault();
+
    emitMessage('createMessage',{
-       from:'User',
+       from:params.name,
        text: messageTextBox.val()
    });
 }
